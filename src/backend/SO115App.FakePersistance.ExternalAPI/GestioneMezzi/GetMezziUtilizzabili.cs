@@ -1,19 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SO115App.API.Models.Classi.Condivise;
+using SO115App.ExternalAPI.Fake.Classi.DTOFake;
+using SO115App.ExternalAPI.Fake.Classi.Gac;
 using SO115App.Models.Classi.Condivise;
+using SO115App.Models.Classi.Utility;
+using SO115App.Models.Servizi.Infrastruttura.Composizione;
+using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Distaccamenti;
 using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Gac;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Distaccamenti;
-using SO115App.Models.Servizi.Infrastruttura.Composizione;
-using Newtonsoft.Json;
-using SO115App.FakePersistence.JSon.Utility;
-using System.IO;
-using SO115App.ExternalAPI.Fake.Classi.DTOFake;
-using SO115App.ExternalAPI.Fake.Classi.Gac;
-using SO115App.Models.Classi.Utility;
 
 namespace SO115App.ExternalAPI.Fake.GestioneMezzi
 {
@@ -39,14 +37,12 @@ namespace SO115App.ExternalAPI.Fake.GestioneMezzi
 
         public async Task<List<Mezzo>> Get(List<string> sedi, string genereMezzo = null, string codiceMezzo = null)
         {
-            var filepath = CostantiJson.ListaMezzi;
-            string json;
-            using (var r = new StreamReader(filepath))
-            {
-                json = r.ReadToEnd();
-            }
-
-            var listaMezziFake = JsonConvert.DeserializeObject<List<MezzoFake>>(json);
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("test");
+            var responseApiFake = await _client.GetAsync($"{_configuration.GetSection("ApiFake").GetSection("MezziController").Value}?CodComando={sedi.Single()}").ConfigureAwait(false);
+            responseApiFake.EnsureSuccessStatusCode();
+            using HttpContent contentFake = responseApiFake.Content;
+            string dataFake = await contentFake.ReadAsStringAsync().ConfigureAwait(false);
+            var listaMezziFake = JsonConvert.DeserializeObject<List<MezzoFake>>(dataFake);
 
             var ListaCodiciSedi = new List<string>();
             foreach (string sede in sedi)

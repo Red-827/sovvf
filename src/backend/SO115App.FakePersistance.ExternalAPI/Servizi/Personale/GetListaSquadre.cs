@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SO115App.API.Models.Classi.Condivise;
-using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Squadre;
-using SO115App.FakePersistence.JSon.Utility;
-using System.IO;
 using SO115App.ExternalAPI.Fake.Classi.DTOFake;
-using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Distaccamenti;
-using SO115App.Models.Classi.Condivise;
-using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Personale;
 using SO115App.Models.Classi.Utenti.Autenticazione;
+using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Distaccamenti;
+using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Personale;
+using SO115App.Models.Servizi.Infrastruttura.SistemiEsterni.Squadre;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace SO115App.ExternalAPI.Fake.Servizi.Personale
 {
@@ -19,43 +17,43 @@ namespace SO115App.ExternalAPI.Fake.Servizi.Personale
     {
         private readonly IGetDistaccamentoByCodiceSedeUC _getDistaccamentoByCodiceSedeUC;
         private readonly IGetPersonaleByCF _getPersonaleByCF;
+        private readonly HttpClient _client;
+        private readonly IConfiguration _configuration;
 
-        public GetListaSquadre(IGetDistaccamentoByCodiceSedeUC GetDistaccamentoByCodiceSedeUC, IGetPersonaleByCF GetPersonaleByCF)
+        public GetListaSquadre(IGetDistaccamentoByCodiceSedeUC GetDistaccamentoByCodiceSedeUC, IGetPersonaleByCF GetPersonaleByCF, HttpClient client, IConfiguration configuration)
         {
             _getDistaccamentoByCodiceSedeUC = GetDistaccamentoByCodiceSedeUC;
             _getPersonaleByCF = GetPersonaleByCF;
+            _client = client;
+            _configuration = configuration;
         }
 
         public async Task<List<Squadra>> Get(List<string> sedi)
         {
-            List<Squadra> listaSquadre = new List<Squadra>();
-            List<string> ListaCodiciSedi = new List<string>();
-
-            var filepath = CostantiJson.ListaSqaudre;
-            string json;
-            using (var r = new StreamReader(filepath))
-            {
-                json = r.ReadToEnd();
-            }
-
-            var listaSquadraFake = JsonConvert.DeserializeObject<List<SquadraFake>>(json);
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("test");
+            var response = await _client.GetAsync($"{_configuration.GetSection("ApiFake").GetSection("SquadreController").Value}?CodComando={sedi.Single()}").ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            using HttpContent content = response.Content;
+            string data = await content.ReadAsStringAsync().ConfigureAwait(false);
+            var listaSquadraFake = JsonConvert.DeserializeObject<List<SquadraFake>>(data);
+            var listaSquadre = new List<Squadra>();
+            var listaCodiciSedi = new List<string>();
 
             foreach (string sede in sedi)
             {
                 var codice = sede.Substring(0, 2);
                 string codiceE = "";
-                codiceE = ListaCodiciSedi.Find(x => x.Equals(codice));
+                codiceE = listaCodiciSedi.Find(x => x.Equals(codice));
                 if (string.IsNullOrEmpty(codiceE))
                 {
-                    ListaCodiciSedi.Add(codice);
+                    listaCodiciSedi.Add(codice);
                 }
             }
 
-            var ListaMezzi = new List<Mezzo>();
-            foreach (string CodSede in ListaCodiciSedi)
+            var listaMezzi = new List<Mezzo>();
+            foreach (string CodSede in listaCodiciSedi)
             {
-                var ListaSquadreSede = listaSquadraFake.FindAll(x => x.Sede.Contains(CodSede));
-                foreach (SquadraFake squadraFake in ListaSquadreSede)
+                foreach (SquadraFake squadraFake in listaSquadraFake.FindAll(x => x.Sede.Contains(CodSede)))
                 {
                     var squadra = MapSqaudra(squadraFake, CodSede);
                     listaSquadre.Add(squadra);
@@ -67,18 +65,14 @@ namespace SO115App.ExternalAPI.Fake.Servizi.Personale
 
         private Squadra MapSqaudra(SquadraFake squadraFake, string CodSede)
         {
-            Squadra.StatoSquadra Stato;
-
-            switch (squadraFake.Stato)
+            var Stato = squadraFake.Stato switch
             {
-                case "L": Stato = Squadra.StatoSquadra.InSede; break;
-                case "A": Stato = Squadra.StatoSquadra.SulPosto; break;
-                case "R": Stato = Squadra.StatoSquadra.InRientro; break;
-                default: Stato = Squadra.StatoSquadra.InSede; break;
-            }
-
-            var distaccamento = new Distaccamento();
-            distaccamento = _getDistaccamentoByCodiceSedeUC.Get(squadraFake.Sede).Result;
+                "L" => Squadra.StatoSquadra.InSede,
+                "A" => Squadra.StatoSquadra.SulPosto,
+                "R" => Squadra.StatoSquadra.InRientro,
+                _ => Squadra.StatoSquadra.InSede,
+            };
+            var distaccamento = _getDistaccamentoByCodiceSedeUC.Get(squadraFake.Sede).Result;
             var sedeDistaccamento = new Sede(squadraFake.Sede, distaccamento.DescDistaccamento, distaccamento.Indirizzo, distaccamento.Coordinate, "", "", "", "", "");
 
             List<string> ListaCodiciFiscaliComponentiSquadra = new List<string>();
@@ -87,7 +81,7 @@ namespace SO115App.ExternalAPI.Fake.Servizi.Personale
             {
                 PersonaleVVF pVVf = _getPersonaleByCF.Get(cf).Result;
 
-                bool capoPartenza = false; bool autista = false;
+                const bool capoPartenza = false; const bool autista = false;
                 Componente c = new Componente("", pVVf.Nominativo, pVVf.Nominativo, capoPartenza, autista, false)
                 {
                     CodiceFiscale = pVVf.CodFiscale,
