@@ -15,10 +15,10 @@ export class UtentiPerPaginaComponent implements OnInit {
     constructor() {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
-    onChangePageSize(pageSize: number) {
+    onChangePageSize(pageSize: number): void {
         this.pageSizeChange.emit(pageSize);
     }
 }

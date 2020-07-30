@@ -4,7 +4,8 @@ import { Observable, Subscription } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import {
     ClearRicercaUtenti,
-    ReducerSelezioneFiltroSede, ResetSediFiltroSelezionate,
+    ReducerSelezioneFiltroSede,
+    ResetSediFiltroSelezionate,
     SetRicercaUtenti
 } from './store/actions/ricerca-utenti/ricerca-utenti.actons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +30,6 @@ import { RuoliUtenteLoggatoState } from '../../shared/store/states/ruoli-utente-
 import { SetCurrentUrl } from '../../shared/store/actions/app/app.actions';
 import { RoutesPath } from '../../shared/enum/routes-path.enum';
 import { AuthState } from '../auth/store/auth.state';
-import { Sede } from '../../shared/model/sede.model';
 
 @Component({
     selector: 'app-gestione-utenti',
@@ -69,7 +69,7 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         this.getUtentiGestione(true);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.store.dispatch([new SetCurrentUrl(RoutesPath.GestioneUtenti), new SetSediNavbarVisible(false)]);
     }
 
@@ -81,19 +81,19 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
-    onRicercaUtenti(ricerca: any) {
+    onRicercaUtenti(ricerca: any): void {
         this.store.dispatch(new SetRicercaUtenti(ricerca));
     }
 
-    onFiltroSediChange(filtroSede: string) {
+    onFiltroSediChange(filtroSede: string): void {
         this.store.dispatch(new ReducerSelezioneFiltroSede(filtroSede));
     }
 
-    onFiltriReset() {
+    onFiltriReset(): void {
         this.store.dispatch(new ResetSediFiltroSelezionate());
     }
 
-    onAddUtente() {
+    onAddUtente(): void {
         const aggiungiUtenteModal = this.modalService.open(GestioneUtenteModalComponent, {
             backdropClass: 'light-blue-backdrop',
             centered: true,
@@ -115,7 +115,7 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         );
     }
 
-    onAddRuoloUtente(event: { codFiscale: string, fullName: string, ruoliAttuali: Ruolo[] }) {
+    onAddRuoloUtente(event: { codFiscale: string, fullName: string, ruoliAttuali: Ruolo[] }): void {
         const aggiungiRuoloUtenteModal = this.modalService.open(GestioneUtenteModalComponent, {
             backdropClass: 'light-blue-backdrop',
             centered: true,
@@ -143,7 +143,7 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         );
     }
 
-    onRemoveRuoloUtente(payload: { codFiscale: string, ruolo: Ruolo, nominativoUtente: string }) {
+    onRemoveRuoloUtente(payload: { codFiscale: string, ruolo: Ruolo, nominativoUtente: string }): void {
         const modalConfermaAnnulla = this.modalService.open(ConfirmModalComponent, {
             backdropClass: 'light-blue-backdrop',
             centered: true
@@ -172,7 +172,7 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         );
     }
 
-    onRemoveUtente(payload: { codFiscale: string, nominativoUtente: string }) {
+    onRemoveUtente(payload: { codFiscale: string, nominativoUtente: string }): void {
         const modalConfermaAnnulla = this.modalService.open(ConfirmModalComponent, {
             backdropClass: 'light-blue-backdrop',
             centered: true
@@ -200,15 +200,15 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         );
     }
 
-    onPageChange(page: number) {
+    onPageChange(page: number): void {
         this.store.dispatch(new GetUtentiGestione(page));
     }
 
-    onPageSizeChange(page: number) {
+    onPageSizeChange(page: number): void {
         this.store.dispatch(new SetPageSize(page));
     }
 
-    getUtentiGestione(pageAttuale: boolean) {
+    getUtentiGestione(pageAttuale: boolean): void {
         let page = null;
         if (pageAttuale) {
             page = this.store.selectSnapshot(PaginationState.page);
@@ -216,7 +216,7 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         this.store.dispatch(new GetUtentiGestione(page));
     }
 
-    getUtente() {
+    getUtente(): void {
         this.subscriptions.add(
             this.utente$.subscribe((utente: Utente) => {
                 this.utente = utente;
@@ -224,7 +224,7 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         );
     }
 
-    getRicerca() {
+    getRicerca(): void {
         this.subscriptions.add(
             this.ricerca$.subscribe((ricerca: string) => {
                 if (ricerca !== null) {
@@ -235,7 +235,7 @@ export class GestioneUtentiComponent implements OnInit, OnDestroy {
         );
     }
 
-    getPageSize() {
+    getPageSize(): void {
         this.subscriptions.add(
             this.pageSize$.subscribe((pageSize: number) => {
                 if (pageSize) {

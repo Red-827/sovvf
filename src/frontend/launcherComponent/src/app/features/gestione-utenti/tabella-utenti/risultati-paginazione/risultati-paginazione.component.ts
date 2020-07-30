@@ -14,7 +14,7 @@ export class RisultatiPaginazioneComponent implements OnInit {
     constructor() {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
 }

@@ -3,8 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AutorimessaComponent } from './autorimessa.component';
 
 const autorimessaRoutes: Routes = [
-  { path: '', component: AutorimessaComponent },
-
+  { path: '', component: AutorimessaComponent }
 ];
 
 @NgModule({

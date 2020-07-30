@@ -12,10 +12,10 @@ export class UtenteNonAbilitatoComponent implements OnInit {
     constructor(private store: Store) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
-    clearCas() {
+    clearCas(): void {
         this.store.dispatch(new CasLogout());
     }
 
