@@ -13,7 +13,7 @@ import { Sede } from '../model/sede.model';
 import { LatLngBoundsLiteral } from 'ngx-google-places-autocomplete/objects/latLng';
 import { StatoFonogramma } from '../enum/stato-fonogramma.enum';
 
-export function makeCopy(value): any {
+export function makeCopy(value): string {
     return (JSON.parse(JSON.stringify(value)));
 }
 
@@ -61,21 +61,21 @@ export function makeLatLngBounds(areaMappa: AreaMappa): LatLngBoundsLiteral {
     } as LatLngBoundsLiteral;
 }
 
-export function degToCompass(num: number) {
+export function degToCompass(num: number): any {
     const val = Math.floor((num / 22.5) + 0.5);
     const arr = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
     return arr[(val % 16)];
 }
 
-export function wipeCoordinate(coordinate: Coordinate) {
+export function wipeCoordinate(coordinate: Coordinate): string {
     if (coordinate) {
         return 'lat=' + Math.floor(coordinate.latitudine * 100) / 100 + '&lon=' + Math.floor(coordinate.longitudine * 100) / 100;
     } else {
-        return console.error('Errore ricezione coordinate: ', coordinate);
+        console.error('Errore ricezione coordinate: ', coordinate);
     }
 }
 
-export function coord2String(number: number) {
+export function coord2String(number: number): string {
     const string = number.toString();
     const countString = string.length;
     return string.slice(0, ((countString - 5) * -1));
@@ -122,7 +122,7 @@ export function arraysEqual(array1: string[], array2: string[]): boolean {
     return true;
 }
 
-export function arrayUnique(arr: any[]) {
+export function arrayUnique(arr: any[]): any[] {
     return arr.filter((item, index) => {
         return arr.indexOf(item) >= index;
     });
@@ -136,7 +136,7 @@ export function arrayUnique(arr: any[]) {
 //     return Math.floor(Math.random() * (max - min + 1) + min);
 // }
 
-export function objectDiff(current: object, previous: object) {
+export function objectDiff(current: object, previous: object): object {
     const newObj: object = {};
     const previousKeys = Object.keys(previous);
     let hasError = false;
@@ -150,17 +150,17 @@ export function objectDiff(current: object, previous: object) {
     return !hasError ? newObj : null;
 }
 
-export function round1decimal(value: number) {
+export function round1decimal(value: number): number {
     const decimal = value < 0.01 ? 1000 : 100;
     return Math.round(value * decimal) / decimal;
 }
 
-export function roundTodecimal(value: number, exp?: number) {
+export function roundTodecimal(value: number, exp?: number): number {
     const number = exp > 0 ? Math.pow(10, exp) : 1;
     return Math.round(value * number) / number;
 }
 
-export function calcolaActionSuggeritaMezzo(stato: StatoMezzo) {
+export function calcolaActionSuggeritaMezzo(stato: StatoMezzo): StatoMezzoActions {
     let actionSuggerita: StatoMezzoActions;
     switch (stato) {
         case StatoMezzo.InUscita:
@@ -185,7 +185,7 @@ export function calcolaActionSuggeritaMezzo(stato: StatoMezzo) {
     return actionSuggerita;
 }
 
-export function statoMezzoActionsEnumToStringArray(exceptStato?: string[]) {
+export function statoMezzoActionsEnumToStringArray(exceptStato?: string[]): string[] {
     let stringArray = [];
     for (const val in StatoMezzoActions) {
         if (typeof StatoMezzoActions[val] === 'string') {
@@ -201,7 +201,7 @@ export function statoMezzoActionsEnumToStringArray(exceptStato?: string[]) {
     return stringArray;
 }
 
-export function statoMezzoColor(stato: StatoMezzo) {
+export function statoMezzoColor(stato: StatoMezzo): string {
     let _returnColor = '';
     switch (stato) {
         case StatoMezzo.InSede:
@@ -229,7 +229,7 @@ export function statoMezzoColor(stato: StatoMezzo) {
     return _returnColor;
 }
 
-export function statoMezzoActionColor(stato: StatoMezzoActions) {
+export function statoMezzoActionColor(stato: StatoMezzoActions): string {
     let _returnColor = '';
     switch (stato) {
         case StatoMezzoActions.Rientrato:
@@ -251,7 +251,7 @@ export function statoMezzoActionColor(stato: StatoMezzoActions) {
     return _returnColor;
 }
 
-export function statoMezzoBorderClass(stato: StatoMezzo) {
+export function statoMezzoBorderClass(stato: StatoMezzo): string {
     let _returnClass = '';
     switch (stato) {
         case StatoMezzo.InSede:
@@ -289,7 +289,7 @@ export function calcolaActionSuggeritaRichiesta(richiesta: SintesiRichiesta): St
 }
 
 
-export function statoRichiestaActionsEnumToStringArray(exceptStato?: string[]) {
+export function statoRichiestaActionsEnumToStringArray(exceptStato?: string[]): string[] {
     let stringArray = [];
     for (const val in StatoRichiestaActions) {
         if (typeof StatoRichiestaActions[val] === 'string') {
@@ -305,7 +305,7 @@ export function statoRichiestaActionsEnumToStringArray(exceptStato?: string[]) {
     return stringArray;
 }
 
-export function statoRichiestaColor(stato: string) {
+export function statoRichiestaColor(stato: string): string {
     let _returnColor = '';
     switch (stato) {
         case StatoRichiesta.Chiusa:
@@ -327,7 +327,7 @@ export function statoRichiestaColor(stato: string) {
     return _returnColor;
 }
 
-export function visualizzaBoschiSterpaglie(tipologieRichiesta: Tipologia[]) {
+export function visualizzaBoschiSterpaglie(tipologieRichiesta: Tipologia[]): boolean {
     let count = 0;
     let _return = false;
     if (tipologieRichiesta) {
@@ -341,15 +341,15 @@ export function visualizzaBoschiSterpaglie(tipologieRichiesta: Tipologia[]) {
     return _return;
 }
 
-export function onlyUnique(value, index, self) {
+export function onlyUnique(value, index, self): boolean {
     return self.indexOf(value) === index;
 }
 
-export function wipeStringUppercase(text: string) {
+export function wipeStringUppercase(text: string): string {
     return text.replace(/(?=[A-Z])/g, ' ').trim();
 }
 
-export function _isAdministrator(utente: Utente, options?: { sede?: Sede }) {
+export function _isAdministrator(utente: Utente, options?: { sede?: Sede }): boolean {
     let count = 0;
     if (!options || !options.sede) {
         for (const ruolo of utente.ruoli) {
