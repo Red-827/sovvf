@@ -22,7 +22,7 @@ export class RpcConnectionService {
         this.subscription.add(this.rpcStore.getRcpStatus().subscribe(result => this.rcpStatus = result));
     }
 
-    private static getRTCPeerConnection() {
+    private static getRTCPeerConnection(): any {
         return window.RTCPeerConnection ||
             window.mozRTCPeerConnection ||
             window.webkitRTCPeerConnection;
@@ -39,7 +39,7 @@ export class RpcConnectionService {
         });
     }
 
-    private determineLocalIp() {
+    private determineLocalIp(): void {
         window.RTCPeerConnection = RpcConnectionService.getRTCPeerConnection();
 
         const pc = new RTCPeerConnection({ iceServers: [] });

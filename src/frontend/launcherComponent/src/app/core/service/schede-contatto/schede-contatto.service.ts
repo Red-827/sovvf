@@ -20,20 +20,21 @@ export class SchedeContattoService {
         return this.http.post<SchedaContatto[]>(`${API_SCHEDE_CONTATTO}/GetSchede`, filtri);
     }
 
-    mergeSchedeContatto(schedaUnita: SchedaContatto) {
+    mergeSchedeContatto(schedaUnita: SchedaContatto): Observable<SchedaContatto[]> {
         return this.http.post<SchedaContatto[]>(`${API_SCHEDE_CONTATTO}/MergeSchede`, schedaUnita);
     }
 
-    undoMergeSchedeContatto(schedaUnita: SchedaContatto) {
+    undoMergeSchedeContatto(schedaUnita: SchedaContatto): Observable<SchedaContatto[]> {
         return this.http.post<SchedaContatto[]>(`${API_SCHEDE_CONTATTO}/UndoMergeSchede`, schedaUnita);
     }
 
-    setSchedaContattoLetta(codiceScheda: string, letta: boolean) {
+    // TODO: rimuovere
+    /* setSchedaContattoLetta(codiceScheda: string, letta: boolean): Observable<any> {
         const obj = { codiceScheda, letta };
         return this.http.put<any>(`${API_SCHEDE_CONTATTO}/SetLetta`, obj);
-    }
+    } */
 
-    setSchedaContattoGestita(scheda: SchedaContatto, gestita: boolean) {
+    setSchedaContattoGestita(scheda: SchedaContatto, gestita: boolean): Observable<any> {
         const obj = { scheda, gestita };
         return this.http.put<any>(`${API_SCHEDE_CONTATTO}/SetGestita`, obj);
     }

@@ -45,7 +45,7 @@ export class AuthService {
         return this.http.get<any>(`${API_URL_CHIAMATA}/DeleteAll`);
     }
 
-    logout() {
+    logout(): void {
         const homeUrl = this.store.selectSnapshot(RouterState.url);
         this.store.dispatch(new Logout(homeUrl));
     }

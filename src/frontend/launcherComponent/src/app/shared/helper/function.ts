@@ -13,7 +13,7 @@ import { Sede } from '../model/sede.model';
 import { LatLngBoundsLiteral } from 'ngx-google-places-autocomplete/objects/latLng';
 import { StatoFonogramma } from '../enum/stato-fonogramma.enum';
 
-export function makeCopy(value): string {
+export function makeCopy(value): any {
     return (JSON.parse(JSON.stringify(value)));
 }
 
@@ -289,7 +289,7 @@ export function calcolaActionSuggeritaRichiesta(richiesta: SintesiRichiesta): St
 }
 
 
-export function statoRichiestaActionsEnumToStringArray(exceptStato?: string[]): string[] {
+export function statoRichiestaActionsEnumToStringArray(exceptStato?: string[]): StatoRichiestaActions[] {
     let stringArray = [];
     for (const val in StatoRichiestaActions) {
         if (typeof StatoRichiestaActions[val] === 'string') {

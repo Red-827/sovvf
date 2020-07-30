@@ -33,14 +33,17 @@ export class SintesiRichiesteService {
     }
 
     public getRichiestaById(id: string): Observable<SintesiRichiesta> {
+        console.log('getRichiestaById', id);
         return this.http.get<SintesiRichiesta>(`${API_GESTIONE_RICHIESTA}/GetRichiesta?idRichiesta=${id}`);
     }
 
     public patchRichiesta(richiesta: SintesiRichiesta): Observable<any> {
+        console.log('patchRichiesta', richiesta);
         return this.http.post<any>(`${API_CHIAMATA}/UpdateIntervento`, richiesta);
     }
 
     public aggiornaStatoRichiesta(obj: any): Observable<any> {
+        console.log('aggiornaStatoRichiesta', obj);
         return this.http.post<any>(`${API_GESTIONE_RICHIESTA}/AggiornaStato`, obj);
     }
 
@@ -50,6 +53,7 @@ export class SintesiRichiesteService {
     }
 
     public aggiornaStatoMezzo(obj: any): Observable<any> {
+        console.log('aggiornaStatoMezzo', obj);
         return this.http.post<any>(`${API_GESTIONE_PARTENZA}/AggiornaPartenza`, obj);
     }
 

@@ -49,7 +49,7 @@ export class GestioneUtentiService {
         return this.http.post<Utente>(API_URL + '/AddUtente', addUtente);
     }
 
-    removeUtente(codFiscale: string) {
+    removeUtente(codFiscale: string): Observable<any> {
         const obj = {
             codFiscale
         };
@@ -60,7 +60,7 @@ export class GestioneUtentiService {
         return this.http.post<Utente>(API_URL_RUOLO + '/AddRuolo', addRuolo);
     }
 
-    removeRuoloUtente(codFiscale: string, ruolo: Ruolo) {
+    removeRuoloUtente(codFiscale: string, ruolo: Ruolo): Observable<any> {
         const obj = {
             codFiscale,
             ruolo

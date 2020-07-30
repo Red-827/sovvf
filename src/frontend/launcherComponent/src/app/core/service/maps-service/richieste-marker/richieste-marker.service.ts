@@ -5,6 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { AreaMappa } from '../../../../features/home/maps/maps-model/area-mappa-model';
 import { FiltroRichieste } from '../../../../features/home/maps/maps-model/filtro-richieste.interface';
 import { AreaMappaFiltrata } from '../../../../shared/helper/query-helper';
+import { RichiestaMarker } from '../../../../features/home/maps/maps-model/richiesta-marker.model';
 
 const BASE_URL = environment.baseUrl;
 const API_MARKER = BASE_URL + environment.apiUrl.markers;
@@ -16,8 +17,8 @@ export class RichiesteMarkerService {
     constructor(private http: HttpClient) {
     }
 
-    public getRichiesteMarkers(areaMappa: AreaMappa, filtroRichieste?: FiltroRichieste): Observable<any> {
-        return this.http.post(`${API_MARKER}/GetRichieste`, AreaMappaFiltrata(areaMappa, { filtroRichieste }));
+    public getRichiesteMarkers(areaMappa: AreaMappa, filtroRichieste?: FiltroRichieste): Observable<RichiestaMarker[]> {
+        return this.http.post<RichiestaMarker[]>(`${API_MARKER}/GetRichieste`, AreaMappaFiltrata(areaMappa, { filtroRichieste }));
     }
 
 }

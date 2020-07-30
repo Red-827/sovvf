@@ -13,8 +13,8 @@ export class ChiamateMarkerService {
     constructor(private http: HttpClient) {
     }
 
-    getChiamateMarkers(): Observable<any> {
-        return this.http.get(API_MARKER_CHIAMATE);
+    getChiamateMarkers(): Observable<ChiamataMarker[]> {
+        return this.http.get<ChiamataMarker[]>(API_MARKER_CHIAMATE);
     }
 
     setChiamataInCorso(marker: ChiamataMarker): Observable<any> {

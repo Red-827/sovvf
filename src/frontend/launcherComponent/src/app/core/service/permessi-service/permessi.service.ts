@@ -22,17 +22,17 @@ export class PermessiService {
         this.getPermessi();
     }
 
-    getPermessi() {
+    getPermessi(): void {
         this.permessi = this.store.selectSnapshot(PermessiState.permessi);
     }
 
-    getRuoliUtenteLoggato() {
+    getRuoliUtenteLoggato(): void {
         this.ruoli$.subscribe((ruoli: Ruolo[]) => {
             this.ruoli = ruoli;
         });
     }
 
-    checkUserPermissionByFeature(feature: PermissionFeatures) {
+    checkUserPermissionByFeature(feature: PermissionFeatures): boolean {
         const featureIndex = searchFeatureIndex(this.permessi, feature);
         if (this.ruoli && this.ruoli && this.ruoli.length > 0 && this.permessi && featureIndex !== null) {
             if (checkRuoliUtente(this.ruoli, this.permessi, featureIndex)) {
@@ -41,7 +41,7 @@ export class PermessiService {
         }
         return false;
 
-        function checkRuoliUtente(ruoli, permessi, index) {
+        function checkRuoliUtente(ruoli, permessi, index): boolean {
             let count = 0;
             ruoli.forEach((ruolo: Ruolo) => {
                 if (permessi[index].roles.indexOf(ruolo.descrizione) !== -1) {
@@ -51,18 +51,18 @@ export class PermessiService {
             return count > 0;
         }
 
-        function searchFeatureIndex(permessi: PermessiFeatureInterface[], permissionFeature: PermissionFeatures) {
-            let index = null;
+        function searchFeatureIndex(permessi: PermessiFeatureInterface[], permissionFeature: PermissionFeatures): number {
+            let index: number;
             permessi.forEach((permesso: PermessiFeatureInterface, i: number) => {
                 if (permesso.feature === permissionFeature) {
                     index = i;
                 }
             });
-            return index;
+            return index ? index : null;
         }
     }
 
-    checkUserPermissionRichiesta(feature: PermissionFeatures, codUOCompetenza: string[], codSOCompetente: string) {
+    checkUserPermissionRichiesta(feature: PermissionFeatures, codUOCompetenza: string[], codSOCompetente: string): boolean {
         const featureIndex = searchFeatureIndex(this.permessi, feature);
         if (this.ruoli && this.ruoli && this.ruoli.length > 0 && this.permessi && featureIndex !== null) {
             if (checkRuoliUtente(this.ruoli, this.permessi, featureIndex)) {
@@ -71,7 +71,7 @@ export class PermessiService {
         }
         return false;
 
-        function checkRuoliUtente(ruoli, permessi, index) {
+        function checkRuoliUtente(ruoli, permessi, index): boolean {
             let count = 0;
             ruoli.forEach((ruolo: Ruolo) => {
                 if (checkSede(ruolo, codUOCompetenza, codSOCompetente) && permessi[index].roles.indexOf(ruolo.descrizione) !== -1) {
@@ -81,17 +81,17 @@ export class PermessiService {
             return count > 0;
         }
 
-        function searchFeatureIndex(permessi: PermessiFeatureInterface[], permissionFeature: PermissionFeatures) {
-            let index = null;
+        function searchFeatureIndex(permessi: PermessiFeatureInterface[], permissionFeature: PermissionFeatures): number {
+            let index: number;
             permessi.forEach((permesso: PermessiFeatureInterface, i: number) => {
                 if (permesso.feature === permissionFeature) {
                     index = i;
                 }
             });
-            return index;
+            return index ? index : null;
         }
 
-        function checkSede(ruolo, codUOCompetenzaRef, codSOCompetenteRef) {
+        function checkSede(ruolo, codUOCompetenzaRef, codSOCompetenteRef): boolean {
             let count = 0;
             if (codUOCompetenzaRef) {
                 codUOCompetenzaRef.forEach((codUo) => {
@@ -107,7 +107,7 @@ export class PermessiService {
         }
     }
 
-    checkUserPermissionSchedaContatto(feature: PermissionFeatures, codSede: string) {
+    checkUserPermissionSchedaContatto(feature: PermissionFeatures, codSede: string): boolean {
         const featureIndex = searchFeatureIndex(this.permessi, feature);
         if (this.ruoli && this.ruoli && this.ruoli.length > 0 && this.permessi && featureIndex !== null) {
             if (checkRuoliUtente(this.ruoli, this.permessi, featureIndex)) {
@@ -116,7 +116,7 @@ export class PermessiService {
         }
         return false;
 
-        function checkRuoliUtente(ruoli, permessi, index) {
+        function checkRuoliUtente(ruoli, permessi, index): boolean {
             let count = 0;
             ruoli.forEach((ruolo: Ruolo) => {
                 if (ruolo.codSede === codSede && permessi[index].roles.indexOf(ruolo.descrizione) !== -1) {
@@ -126,14 +126,14 @@ export class PermessiService {
             return count > 0;
         }
 
-        function searchFeatureIndex(permessi: PermessiFeatureInterface[], permissionFeature: PermissionFeatures) {
-            let index = null;
+        function searchFeatureIndex(permessi: PermessiFeatureInterface[], permissionFeature: PermissionFeatures): number {
+            let index: number;
             permessi.forEach((permesso: PermessiFeatureInterface, i: number) => {
                 if (permesso.feature === permissionFeature) {
                     index = i;
                 }
             });
-            return index;
+            return index ? index : null;
         }
     }
 }
