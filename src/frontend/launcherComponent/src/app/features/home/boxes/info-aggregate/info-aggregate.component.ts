@@ -59,13 +59,13 @@ export class InfoAggregateComponent implements OnInit, OnDestroy {
         this.store.dispatch(new ReducerBoxClick(cat, tipo));
     }
 
-    clickServizi(tipo: string) {
+    clickServizi(tipo: string): void {
         if (tipo === 'openModal') {
             // this.modalService.open(ModalServiziComponent, { size: 'lg', centered: true });
         }
     }
 
-    startMeteo() {
+    startMeteo(): void {
         const coordinateUtente = this.store.selectSnapshot(AuthState.currentUser).sede.coordinate;
         const coordinate = new Coordinate(coordinateUtente.latitudine, coordinateUtente.longitudine);
         this._getMeteoData(coordinate);
@@ -75,7 +75,7 @@ export class InfoAggregateComponent implements OnInit, OnDestroy {
         }, 300000);
     }
 
-    _getMeteoData(coords: Coordinate) {
+    _getMeteoData(coords: Coordinate): void {
         setTimeout(() => {
             this.meteoService.getMeteoData(coords)
                 .subscribe(data => {

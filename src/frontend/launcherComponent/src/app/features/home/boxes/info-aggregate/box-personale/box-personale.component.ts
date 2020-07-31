@@ -34,13 +34,13 @@ export class BoxPersonaleComponent implements OnChanges {
         // config.closeDelay = 100;
     }
 
-    checkDiff(key: string) {
+    checkDiff(key: string): string {
         if (this.personaleDiff) {
             return setBlinking(this.personaleDiff[key]);
         }
     }
 
-    realDiff(key: string) {
+    realDiff(key: string): string {
         if (this.personaleDiff) {
             return setArrow(this.personaleDiff[key]);
         }

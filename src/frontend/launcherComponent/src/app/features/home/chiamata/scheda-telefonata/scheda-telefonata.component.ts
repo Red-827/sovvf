@@ -34,7 +34,7 @@ import { GOOGLEPLACESOPTIONS } from '../../../../core/settings/google-places-opt
 @Component({
     selector: 'app-scheda-telefonata',
     templateUrl: './scheda-telefonata.component.html',
-    styleUrls: [ './scheda-telefonata.component.scss' ],
+    styleUrls: ['./scheda-telefonata.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class SchedaTelefonataComponent implements OnInit, OnDestroy {
@@ -76,7 +76,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
 
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.chiamataForm = this.createForm();
         this.initNuovaRichiesta();
         this.idChiamata = this.makeIdChiamata();
@@ -103,7 +103,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
     }
 
 
-    clearFormDisconnection() {
+    clearFormDisconnection(): void {
         this.submitted = false;
         this.chiamataForm.reset();
         this.clearTipologieSelezionate();
@@ -116,30 +116,30 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
 
     createForm(): FormGroup {
         return this.formBuilder.group({
-            selectedTipologie: [ null, Validators.required ],
-            nominativo: [ null, Validators.required ],
-            telefono: [ null, [ Validators.required, Validators.pattern('^(\\+?)[0-9]+$') ] ],
-            indirizzo: [ null, Validators.required ],
-            latitudine: [ null, [ Validators.required, Validators.pattern('^(\\-?)([0-9]+)(\\.)([0-9]+)$') ] ],
-            longitudine: [ null, [ Validators.required, Validators.pattern('^(\\-?)([0-9]+)(\\.)([0-9]+)$') ] ],
-            piano: [ null ],
-            etichette: [ null ],
-            noteIndirizzo: [ null ],
-            rilevanzaGrave: [ false ],
-            rilevanzaStArCu: [ false ],
-            notePrivate: [ null ],
-            notePubbliche: [ null ],
-            descrizione: [ null ],
-            zoneEmergenza: [ null ],
-            prioritaRichiesta: [ 3, Validators.required ]
+            selectedTipologie: [null, Validators.required],
+            nominativo: [null, Validators.required],
+            telefono: [null, [Validators.required, Validators.pattern('^(\\+?)[0-9]+$')]],
+            indirizzo: [null, Validators.required],
+            latitudine: [null, [Validators.required, Validators.pattern('^(\\-?)([0-9]+)(\\.)([0-9]+)$')]],
+            longitudine: [null, [Validators.required, Validators.pattern('^(\\-?)([0-9]+)(\\.)([0-9]+)$')]],
+            piano: [null],
+            etichette: [null],
+            noteIndirizzo: [null],
+            rilevanzaGrave: [false],
+            rilevanzaStArCu: [false],
+            notePrivate: [null],
+            notePubbliche: [null],
+            descrizione: [null],
+            zoneEmergenza: [null],
+            prioritaRichiesta: [3, Validators.required]
         });
     }
 
-    get f() {
+    get f(): any {
         return this.chiamataForm.controls;
     }
 
-    initNuovaRichiesta() {
+    initNuovaRichiesta(): void {
         this.nuovaRichiesta = new SintesiRichiesta(
             null,
             null,
@@ -159,7 +159,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         this.nuovaRichiesta.rilevanteGrave = false;
     }
 
-    setRilevanza() {
+    setRilevanza(): void {
         if (this.f.rilevanzaGrave.value === true) {
             this.f.rilevanzaGrave.setValue(false);
         } else {
@@ -167,7 +167,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         }
     }
 
-    setRilevanzaStArCu() {
+    setRilevanzaStArCu(): void {
         if (this.f.rilevanzaStArCu.value === true) {
             this.f.rilevanzaStArCu.setValue(false);
         } else {
@@ -175,7 +175,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         }
     }
 
-    getChiamataForm() {
+    getChiamataForm(): void {
         const f = this.f;
         this.nuovaRichiesta.richiedente = new Richiedente(f.telefono.value, f.nominativo.value);
         this.nuovaRichiesta.localita.note = f.noteIndirizzo.value;
@@ -196,7 +196,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         console.log('Nuova Richiesta', this.nuovaRichiesta);
     }
 
-    onAddTipologia(tipologia: any) {
+    onAddTipologia(tipologia: Tipologia): void {
         if (!this.nuovaRichiesta.tipologie) {
             this.nuovaRichiesta.tipologie = [];
             this.onAddTipologia(tipologia);
@@ -205,15 +205,15 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         }
     }
 
-    onRemoveTipologia(tipologia: any) {
-        this.nuovaRichiesta.tipologie.splice(this.nuovaRichiesta.tipologie.indexOf(tipologia.codice), 1);
+    onRemoveTipologia(tipologia: Tipologia): void {
+        this.nuovaRichiesta.tipologie.splice(this.nuovaRichiesta.tipologie.indexOf(tipologia), 1);
     }
 
     checkTipologie(): boolean {
         return !!!(this.nuovaRichiesta.tipologie && (this.nuovaRichiesta.tipologie.length > 0));
     }
 
-    clearTipologieSelezionate() {
+    clearTipologieSelezionate(): void {
         this.f.selectedTipologie.patchValue([]);
         this.nuovaRichiesta.tipologie = [];
     }
@@ -254,7 +254,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         }
     }
 
-    checkNessunCampoModificato() {
+    checkNessunCampoModificato(): boolean {
         let _return = false;
         if (!this.f.selectedTipologie.value && !this.f.nominativo.value && !this.f.telefono.value
             && !this.f.indirizzo.value && !this.f.latitudine.value && !this.f.longitudine.value
@@ -375,7 +375,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         return !(this.chiamataForm.valid && !!this.coordinate);
     }
 
-    impostaAzioneChiamata($event: AzioneChiamataEnum) {
+    impostaAzioneChiamata($event: AzioneChiamataEnum): void {
         if ($event === AzioneChiamataEnum.InviaPartenza || $event === AzioneChiamataEnum.MettiInCoda) {
             this.nuovaRichiesta.azione = $event;
         } else {
@@ -423,7 +423,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         }
     }
 
-    setSchedaContatto(scheda: SchedaContatto) {
+    setSchedaContatto(scheda: SchedaContatto): void {
         const f = this.f;
 
         f.nominativo.patchValue(scheda.richiedente.nominativo);
@@ -450,7 +450,7 @@ export class SchedaTelefonataComponent implements OnInit, OnDestroy {
         }
     }
 
-    _statoChiamata(tipo: string, azione?: AzioneChiamataEnum) {
+    _statoChiamata(tipo: string, azione?: AzioneChiamataEnum): void {
 
         const schedaTelefonata: SchedaTelefonataInterface = {
             tipo: tipo,
