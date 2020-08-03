@@ -53,6 +53,7 @@ import { ClearBoxPartenze } from '../../actions/composizione-partenza/box-parten
 import { GetMarkersMappa, StartLoadingAreaMappa, StopLoadingAreaMappa } from '../../actions/maps/area-mappa.actions';
 import { ShowToastr } from 'src/app/shared/store/actions/toastr/toastr.actions';
 import { ToastrType } from 'src/app/shared/enum/toastr';
+import { Injectable } from '@angular/core';
 
 export interface ComposizionePartenzaStateModel {
     filtriAffini: ListaTipologicheMezzi;
@@ -82,12 +83,11 @@ export const ComposizioneStateDefaults: ComposizionePartenzaStateModel = {
     loaded: null
 };
 
-
+@Injectable()
 @State<ComposizionePartenzaStateModel>({
     name: 'composizionePartenza',
     defaults: ComposizioneStateDefaults
 })
-
 export class ComposizionePartenzaState {
 
     @Selector()

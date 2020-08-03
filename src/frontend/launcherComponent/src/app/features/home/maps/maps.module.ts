@@ -6,7 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
  * AGM CORE
  */
 import { AgmCoreModule } from '@agm/core';
-import { AgmJsMarkerClustererModule } from '@agm/js-marker-clusterer';
+// import { AgmJsMarkerClustererModule } from '@agm/js-marker-clusterer';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { AgmDirectionModule } from 'agm-direction';
 
@@ -66,7 +66,7 @@ import { FormsModule } from '@angular/forms';
         NgbModule,
         AgmCoreModule.forRoot(),
         AgmDirectionModule,
-        AgmJsMarkerClustererModule,
+        // AgmJsMarkerClustererModule,
         AgmSnazzyInfoWindowModule,
         SintesiRichiestaModule,
         SharedModule.forRoot(),

@@ -1,15 +1,12 @@
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-
-// Model
 import { SintesiRichiesta } from '../../../../../shared/model/sintesi-richiesta.model';
-
-// Action
 import { ClearRichiestaGestione, SetRichiestaGestione } from '../../actions/richieste/richiesta-gestione.actions';
 import { ClearRichiestaSelezionata } from '../../actions/richieste/richiesta-selezionata.actions';
 import { AddRichiestaEspansa } from '../../actions/richieste/richieste-espanse.actions';
 import { ClearMarkerRichiestaSelezionato, SetMarkerRichiestaSelezionato } from '../../actions/maps/marker.actions';
 import { GetInitCentroMappa } from '../../actions/maps/centro-mappa.actions';
 import { RichiestaFissataState } from './richiesta-fissata.state';
+import { Injectable } from '@angular/core';
 
 export interface RichiestaGestioneStateModel {
     richiestaGestione: SintesiRichiesta;
@@ -19,6 +16,7 @@ export const RichiestaGestioneStateDefaults: RichiestaGestioneStateModel = {
     richiestaGestione: null
 };
 
+@Injectable()
 @State<RichiestaGestioneStateModel>({
     name: 'richiestaGestione',
     defaults: RichiestaGestioneStateDefaults

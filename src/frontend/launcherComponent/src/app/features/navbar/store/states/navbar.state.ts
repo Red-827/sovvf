@@ -1,12 +1,11 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { ClearDataNavbar, GetDataNavbar, SetDataNavbar } from '../actions/navbar.actions';
-import { ShowToastr } from '../../../../shared/store/actions/toastr/toastr.actions';
-import { ToastrType } from '../../../../shared/enum/toastr';
 import { NavbarService } from '../../../../core/service/navbar-service/navbar.service';
 import { ListaSedi } from '../../../../shared/interface/lista-sedi';
 import { SetListaSediTreeview } from '../../../../shared/store/actions/sedi-treeview/sedi-treeview.actions';
 import { AppSettings } from '../../../../shared/interface/app-settings.interface';
 import { SetRuoliUtenteLoggato } from '../../../../shared/store/actions/ruoli/ruoli.actions';
+import { Injectable } from '@angular/core';
 
 export interface NavbarStateModel {
     loaded: boolean;
@@ -18,6 +17,7 @@ export const NavbarStateDefaults: NavbarStateModel = {
     listaSedi: null,
 };
 
+@Injectable()
 @State<NavbarStateModel>({
     name: 'navbar',
     defaults: NavbarStateDefaults

@@ -41,6 +41,7 @@ import { ClearDirection } from '../../actions/maps/maps-direction.actions';
 import { ClearMarkerMezzoSelezionato } from '../../actions/maps/marker.actions';
 import { ComposizionePartenzaState } from './composizione-partenza.state';
 import { StatoMezzo } from '../../../../../shared/enum/stato-mezzo.enum';
+import { Injectable } from '@angular/core';
 
 
 export interface BoxPartenzaStateModel {
@@ -53,6 +54,7 @@ export const BoxPartenzaStateDefaults: BoxPartenzaStateModel = {
     idBoxPartenzaSelezionato: null
 };
 
+@Injectable()
 @State<BoxPartenzaStateModel>({
     name: 'boxPartenza',
     defaults: BoxPartenzaStateDefaults

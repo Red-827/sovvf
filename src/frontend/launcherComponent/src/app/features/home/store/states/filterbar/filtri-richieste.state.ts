@@ -17,6 +17,7 @@ import { insertItem, patch, removeItem } from '@ngxs/store/operators';
 import { GetListaRichieste } from '../../actions/richieste/richieste.actions';
 import produce from 'immer';
 import { VociFiltroDefault } from '../../../../../shared/enum/voci-filtro-default.enum';
+import { Injectable } from '@angular/core';
 
 export interface FiltriRichiesteStateModel {
     filtriStaticiRichieste: VoceFiltro[];
@@ -39,6 +40,7 @@ export const filtriRichiesteStateDefaults: FiltriRichiesteStateModel = {
     filtriTipologiaSelezionati: []
 };
 
+@Injectable()
 @State<FiltriRichiesteStateModel>({
     name: 'filtriRichieste',
     defaults: filtriRichiesteStateDefaults

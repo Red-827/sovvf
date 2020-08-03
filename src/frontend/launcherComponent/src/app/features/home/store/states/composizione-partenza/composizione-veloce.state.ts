@@ -33,6 +33,7 @@ import {
 import produce from 'immer';
 import { SetListaFiltriAffini } from '../../actions/composizione-partenza/composizione-partenza.actions';
 import { ComposizionePartenzaState } from './composizione-partenza.state';
+import { Injectable } from '@angular/core';
 
 export interface PreAccoppiatiStateModel {
     allPreAccoppiati: BoxPartenza[];
@@ -54,6 +55,7 @@ export const PreAccoppiatiStateModelStateDefaults: PreAccoppiatiStateModel = {
     idPreaccoppiatoHover: null
 };
 
+@Injectable()
 @State<PreAccoppiatiStateModel>({
     name: 'preAccoppiati',
     defaults: PreAccoppiatiStateModelStateDefaults

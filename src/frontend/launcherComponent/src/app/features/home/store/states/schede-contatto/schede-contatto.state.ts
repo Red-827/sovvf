@@ -6,7 +6,9 @@ import {
     ClearSchedaContattoHover,
     ClearSchedaContattoTelefonata,
     GeneraListaSchedeContatto,
-    GetListaSchedeContatto, InsertSchedeContatto, OpenDetailSC,
+    GetListaSchedeContatto,
+    InsertSchedeContatto,
+    OpenDetailSC,
     ReducerSetFiltroSchedeContatto,
     RemoveSchedeContatto,
     ResetFiltriSelezionatiSchedeContatto,
@@ -14,12 +16,16 @@ import {
     SetContatoriSchedeContatto,
     SetFiltroGestitaSchedeContatto,
     SetFiltroKeySchedeContatto,
-    SetFiltroSelezionatoSchedaContatto, SetIdVisualizzati,
+    SetFiltroSelezionatoSchedaContatto,
+    SetIdVisualizzati,
     SetListaSchedeContatto,
     SetRangeVisualizzazioneSchedeContatto,
     SetSchedaContattoGestita,
     SetSchedaContattoHover,
-    SetSchedaContattoTelefonata, SetTabAttivo, ToggleCollapsed, UndoMergeSchedeContatto,
+    SetSchedaContattoTelefonata,
+    SetTabAttivo,
+    ToggleCollapsed,
+    UndoMergeSchedeContatto,
     UpdateSchedaContatto
 } from '../../actions/schede-contatto/schede-contatto.actions';
 import { ClassificazioneSchedaContatto } from '../../../../../shared/enum/classificazione-scheda-contatto.enum';
@@ -27,10 +33,7 @@ import { SchedeContattoService } from '../../../../../core/service/schede-contat
 import { FiltriSchedeContatto } from '../../../../../shared/interface/filtri-schede-contatto.interface';
 import { VoceFiltro } from '../../../filterbar/filtri-richieste/voce-filtro.model';
 import { makeCopy } from '../../../../../shared/helper/function';
-import {
-    resetFiltriSelezionati as _resetFiltriSelezionati,
-    setFiltroSelezionato as _setFiltroSelezionato
-} from '../../../../../shared/helper/function-filtro';
+import { resetFiltriSelezionati as _resetFiltriSelezionati, setFiltroSelezionato as _setFiltroSelezionato } from '../../../../../shared/helper/function-filtro';
 import { CategoriaFiltriSchedeContatto as Categoria } from '../../../../../shared/enum/categoria-filtri-schede-contatto';
 import { ContatoriSchedeContatto } from '../../../../../shared/interface/contatori-schede-contatto.interface';
 import { ContatoriSchedeContattoModel } from '../../../../../shared/model/contatori-schede-contatto.model';
@@ -39,16 +42,11 @@ import { RangeSchedeContattoEnum } from '../../../../../shared/enum/range-schede
 import { MergeSchedeContattoState } from './merge-schede-contatto.state';
 import { ShowToastr } from '../../../../../shared/store/actions/toastr/toastr.actions';
 import { ToastrType } from '../../../../../shared/enum/toastr';
-import {
-    ClearMergeSchedeContatto
-} from '../../actions/schede-contatto/merge-schede-contatto.actions';
-import {
-    RefreshSchedeContattoMarkers,
-    ToggleOpacitaSchedeContattoMarkers
-} from '../../actions/maps/schede-contatto-markers.actions';
+import { ClearMergeSchedeContatto } from '../../actions/schede-contatto/merge-schede-contatto.actions';
+import { RefreshSchedeContattoMarkers, ToggleOpacitaSchedeContattoMarkers } from '../../actions/maps/schede-contatto-markers.actions';
 import { DettaglioSchedaModalComponent } from '../../../schede-contatto/dettaglio-scheda-modal/dettaglio-scheda-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgZone } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { ClearMarkerSCSelezionato } from '../../actions/maps/marker.actions';
 
 export interface SchedeContattoStateModel {
@@ -94,10 +92,11 @@ export const SchedeContattoStateDefaults: SchedeContattoStateModel = {
     }
 };
 
+@Injectable()
 @State<SchedeContattoStateModel>({
     name: 'schedeContatto',
     defaults: SchedeContattoStateDefaults,
-    children: [ MergeSchedeContattoState ]
+    children: [MergeSchedeContattoState]
 })
 export class SchedeContattoState {
 
@@ -307,7 +306,7 @@ export class SchedeContattoState {
             });
         } else {
             patchState({
-                idVisualizzati: [ ...state.idSchedeContattoCompetenza, ...state.idSchedeContattoConoscenza, ...state.idSchedeContattoDifferibili ]
+                idVisualizzati: [...state.idSchedeContattoCompetenza, ...state.idSchedeContattoConoscenza, ...state.idSchedeContattoDifferibili]
             });
         }
     }
@@ -414,7 +413,7 @@ export class SchedeContattoState {
                 gestita: null
             }
         });
-        dispatch([ new GetListaSchedeContatto(), new ResetFiltriSelezionatiSchedeContatto() ]);
+        dispatch([new GetListaSchedeContatto(), new ResetFiltriSelezionatiSchedeContatto()]);
     }
 
     // SET FILTRO SELEZIONATO (SELEZIONATO, NON-SELEZIONATO)
@@ -469,12 +468,12 @@ export class SchedeContattoState {
                 (a.priorita === b.priorita) ? ((new Date(a.dataInserimento).getTime() > new Date(b.dataInserimento).getTime()) ? 1 : -1) : -1);
         const mergeSchedeContatto: SchedaContatto = {
             ...schedeSelezionate[0],
-            collegate: [ ...schedeSelezionate.slice(1).map(value => {
+            collegate: [...schedeSelezionate.slice(1).map(value => {
                 return {
                     ...value,
                     collegata: true
                 };
-            }) ]
+            })]
         };
         this.schedeContattoService.mergeSchedeContatto(mergeSchedeContatto).subscribe(() => {
             console.log('Unione schede completata', mergeSchedeContatto);

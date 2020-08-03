@@ -25,6 +25,7 @@ import { codDistaccamentoIsEqual } from '../../../composizione-partenza/shared/f
 import { SetListaFiltriAffini } from '../../actions/composizione-partenza/composizione-partenza.actions';
 import { ComposizionePartenzaState } from './composizione-partenza.state';
 import { MezzoComposizione } from '../../../composizione-partenza/interface/mezzo-composizione-interface';
+import { Injectable } from '@angular/core';
 
 export interface SquadreComposizioneStateStateModel {
     allSquadreComposione: SquadraComposizione[];
@@ -42,6 +43,7 @@ export const SquadreComposizioneStateDefaults: SquadreComposizioneStateStateMode
     idSquadraHover: null
 };
 
+@Injectable()
 @State<SquadreComposizioneStateStateModel>({
     name: 'squadreComposizione',
     defaults: SquadreComposizioneStateDefaults

@@ -4,39 +4,56 @@ import { Role } from './shared/model/utente.model';
 import { AuthGuard } from './core/auth/auth.guard';
 
 const appRoutes: Routes = [
-    { path: RoutesPath.Login, loadChildren: './features/login/login.module#LoginModule' },
-    { path: RoutesPath.Auth, loadChildren: './features/auth/auth.module#AuthModule' },
-    { path: RoutesPath.Home, loadChildren: './features/home/home.module#HomeModule', canActivate: [ AuthGuard ] },
+    {
+        path: RoutesPath.Login,
+        loadChildren: () => import('./features/login/login.module').then(m => m.LoginModule),
+    },
+    {
+        path: RoutesPath.Auth,
+        loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
+    },
+    {
+        path: RoutesPath.Home,
+        loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule),
+        canActivate: [AuthGuard]
+    },
     {
         path: RoutesPath.Autorimessa,
-        loadChildren: './features/autorimessa/autorimessa.module#AutorimessaModule',
-        canActivate: [ AuthGuard ],
-        data: { roles: [ Role.Amministratore, Role.GestoreRichieste, Role.GestoreChiamate ] }
+        loadChildren: () => import('./features/autorimessa/autorimessa.module').then(m => m.AutorimessaModule),
+        canActivate: [AuthGuard],
+        data: { roles: [Role.Amministratore, Role.GestoreRichieste, Role.GestoreChiamate] }
     },
     {
         path: RoutesPath.Logged,
-        loadChildren: './features/logged/logged.module#LoggedModule',
-        canActivate: [ AuthGuard ]
+        loadChildren: () => import('./features/logged/logged.module').then(m => m.LoggedModule),
+        canActivate: [AuthGuard]
     },
     {
         path: RoutesPath.Servizi,
-        loadChildren: './features/servizi/servizi.module#ServiziModule',
-        canActivate: [ AuthGuard ],
-        data: { roles: [ Role.Amministratore, Role.GestoreRichieste, Role.GestoreChiamate ] }
+        loadChildren: () => import('./features/servizi/servizi.module').then(m => m.ServiziModule),
+        canActivate: [AuthGuard],
+        data: { roles: [Role.Amministratore, Role.GestoreRichieste, Role.GestoreChiamate] }
     },
     {
         path: RoutesPath.Statistiche,
-        loadChildren: './features/statistiche/statistiche.module#StatisticheModule',
-        canActivate: [ AuthGuard ]
+        loadChildren: () => import('./features/statistiche/statistiche.module').then(m => m.StatisticheModule),
+        canActivate: [AuthGuard]
     },
     {
         path: RoutesPath.GestioneUtenti,
-        loadChildren: './features/gestione-utenti/gestione-utenti.module#GestioneUtentiModule',
-        canActivate: [ AuthGuard ],
-        data: { roles: [ Role.Amministratore ] }
+        loadChildren: () => import('./features/gestione-utenti/gestione-utenti.module').then(m => m.GestioneUtentiModule),
+        canActivate: [AuthGuard],
+        data: { roles: [Role.Amministratore] }
     },
-    { path: RoutesPath.NotFound, loadChildren: './features/not-found/not-found.module#NotFoundModule' },
-    { path: '', pathMatch: 'full', redirectTo: RoutesPath.Home },
+    {
+        path: RoutesPath.NotFound,
+        loadChildren: () => import('./features/not-found/not-found.module').then(m => m.NotFoundModule),
+    },
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: RoutesPath.Home
+    },
     {
         path: RoutesPath.CasLogout,
         redirectTo: 'auth/' + RoutesPath.CasLogout,

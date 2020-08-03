@@ -1,10 +1,7 @@
 import { Selector, State, Action, StateContext } from '@ngxs/store';
-
-// Interface
 import { DirectionInterface } from '../../../maps/maps-interface/direction-interface';
-
-// Action
 import { SetDirection, ClearDirection } from '../../actions/maps/maps-direction.actions';
+import { Injectable } from '@angular/core';
 
 export interface MapsDirectionStateModel {
     direction: DirectionInterface;
@@ -16,6 +13,7 @@ export const mapsDirectionStateDefaults: MapsDirectionStateModel = {
     }
 };
 
+@Injectable()
 @State<MapsDirectionStateModel>({
     name: 'mapsDirection',
     defaults: mapsDirectionStateDefaults

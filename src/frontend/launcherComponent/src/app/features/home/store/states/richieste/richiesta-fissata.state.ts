@@ -2,7 +2,7 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { SetRichiestaFissata, ClearRichiestaFissata, SetEspanso, UpdateRichiestaFissata } from '../../actions/richieste/richiesta-fissata.actions';
 import { SintesiRichiesta } from '../../../../../shared/model/sintesi-richiesta.model';
 import { SintesiRichiesteService } from '../../../../../core/service/lista-richieste-service/lista-richieste.service';
-import { patch, updateItem } from '@ngxs/store/operators';
+import { Injectable } from '@angular/core';
 
 export interface RichiestaFissataStateModel {
     idRichiestaFissata: string;
@@ -16,6 +16,7 @@ export const RichiestaFissataStateDefaults: RichiestaFissataStateModel = {
     espanso: false
 };
 
+@Injectable()
 @State<RichiestaFissataStateModel>({
     name: 'richiestaFissata',
     defaults: RichiestaFissataStateDefaults

@@ -3,6 +3,7 @@ import { GetNewVersion, SetCurrentVersion, SetNewVersion } from '../../actions/n
 import { ShowToastr } from '../../actions/toastr/toastr.actions';
 import { ToastrType } from '../../../enum/toastr';
 import { VersionInterface } from '../../../interface/version.interface';
+import { Injectable } from '@angular/core';
 
 export interface NewVersionStateModel {
     currentVersion: VersionInterface;
@@ -14,6 +15,7 @@ export const NewVersionStateModelDefaults: NewVersionStateModel = {
     newVersion: null
 };
 
+@Injectable()
 @State<NewVersionStateModel>({
     name: 'newVersion',
     defaults: NewVersionStateModelDefaults

@@ -14,6 +14,7 @@ import {
 } from '../../actions/maps/sedi-markers.actions';
 import { append, insertItem, patch, removeItem, updateItem } from '@ngxs/store/operators';
 import { StartLoadingAreaMappa, StopLoadingAreaMappa } from '../../actions/maps/area-mappa.actions';
+import { Injectable } from '@angular/core';
 
 export interface SediMarkersStateModel {
     sediMarkers: SedeMarker[];
@@ -27,11 +28,11 @@ export const SediMarkersStateDefaults: SediMarkersStateModel = {
     sedeMarkerById: null
 };
 
+@Injectable()
 @State<SediMarkersStateModel>({
     name: 'sediMarkers',
     defaults: SediMarkersStateDefaults
 })
-
 export class SediMarkersState {
 
     @Selector()
