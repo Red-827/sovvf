@@ -9,8 +9,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ListaPartenzeComponent } from './components/lista-partenze/lista-partenze.component';
 import { EnteModalComponent } from './modal/ente-modal/ente-modal.component';
 import { NumeriEnteComponent } from './components/numeri-ente/numeri-ente.component';
-import * as Shared from './index';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
+import { FormRichiestaComponent } from './components/form-richiesta/form-richiesta.component';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { UiSwitchModule } from 'ngx-ui-switch';
+import { TagInputModule } from 'ngx-chips';
+import * as Shared from './index';
 
 
 const COMPONENTS = [
@@ -40,8 +44,10 @@ const COMPONENTS = [
     Shared.ModificaEntiModalComponent,
 
     ListaPartenzeComponent,
+    ListaPartenzeComponent,
     EnteModalComponent,
-    NumeriEnteComponent
+    NumeriEnteComponent,
+    FormRichiestaComponent
 ];
 
 @NgModule({
@@ -53,7 +59,11 @@ const COMPONENTS = [
         PipeModule,
         TreeviewModule.forRoot(),
         NgSelectModule,
-        NgxsFormPluginModule.forRoot()
+        NgxsFormPluginModule.forRoot(),
+        GooglePlaceModule,
+        UiSwitchModule,
+        TagInputModule,
+        NgxsFormPluginModule
     ],
     declarations: [
         ...COMPONENTS,

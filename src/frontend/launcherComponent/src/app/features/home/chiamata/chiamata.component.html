@@ -1,9 +1,4 @@
 <div class="pl-3">
-    <app-scheda-telefonata [tipologie]="(tipologie$ | async)"
-                           [operatore]="(utente$ | async)"
-                           [disabledInviaPartenza]="permessiFeature.ComposizionePartenzaRichiesta | checkPermission"
-                           [loading]="loadingNuovaChiamata$ | async"
-                           [enti]="enti$ | async"
-                           (aggiungiNuovoEnte)="aggiungiNuovoEnte()">
-    </app-scheda-telefonata>
+    <app-form-richiesta [disabledInviaPartenza]="permessiFeature.ComposizionePartenzaRichiesta | checkPermission"
+                        (aggiungiNuovoEnte)="aggiungiNuovoEnte()"></app-form-richiesta>
 </div>

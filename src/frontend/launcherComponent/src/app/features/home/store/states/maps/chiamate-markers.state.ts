@@ -15,10 +15,9 @@ import {
 import { ChiamateMarkerService } from '../../../../../core/service/maps-service';
 import { ShowToastr } from '../../../../../shared/store/actions/toastr/toastr.actions';
 import { ToastrType } from '../../../../../shared/enum/toastr';
-import { SchedaTelefonataState } from '../chiamata/scheda-telefonata.state';
-import { ClearIndirizzo } from '../../actions/chiamata/scheda-telefonata.actions';
-import { GetMarkerDatiMeteo } from '../../actions/maps/marker-info-window.actions';
-import { ClearCentroMappa, GetInitCentroMappa, SetCentroMappa, SetCoordCentroMappa, SetZoomCentroMappa } from '../../actions/maps/centro-mappa.actions';
+import { GetInitCentroMappa } from '../../actions/maps/centro-mappa.actions';
+import { FormRichiestaState } from '../../../../../shared/store/states/form-richiesta/form-richiesta.state';
+import { ClearIndirizzo } from '../../../../../shared/store/actions/form-richiesta/form-richiesta.actions';
 
 export interface ChiamateMarkersStateModel {
     chiamateMarkers: ChiamataMarker[];
@@ -99,7 +98,7 @@ export class ChiamateMarkersState {
 
     @Action(InsertChiamataMarker)
     insertChiamataMarker({ setState, dispatch }: StateContext<ChiamateMarkersStateModel>, { chiamataMarker }: InsertChiamataMarker) {
-        const mySelf = this.store.selectSnapshot(SchedaTelefonataState.myChiamataMarker);
+        const mySelf = this.store.selectSnapshot(FormRichiestaState.myChiamataMarker);
         if (mySelf) {
             chiamataMarker.mySelf = mySelf === chiamataMarker.id;
         }
@@ -112,7 +111,7 @@ export class ChiamateMarkersState {
 
     @Action(UpdateItemChiamataMarker)
     updateItemChiamataMarker({ setState, dispatch }: StateContext<ChiamateMarkersStateModel>, { chiamataMarker }: UpdateItemChiamataMarker) {
-        const mySelf = this.store.selectSnapshot(SchedaTelefonataState.myChiamataMarker);
+        const mySelf = this.store.selectSnapshot(FormRichiestaState.myChiamataMarker);
         if (mySelf) {
             chiamataMarker.mySelf = mySelf === chiamataMarker.id;
         }

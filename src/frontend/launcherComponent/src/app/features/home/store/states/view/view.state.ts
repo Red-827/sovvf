@@ -38,13 +38,13 @@ import {
 import { GetInitCentroMappa, SetCoordCentroMappa } from '../../actions/maps/centro-mappa.actions';
 import { ClearDirection } from '../../actions/maps/maps-direction.actions';
 import { ClearMarkerRichiestaSelezionato } from '../../actions/maps/marker.actions';
-import { ResetChiamata } from '../../actions/chiamata/scheda-telefonata.actions';
 import { ComposizionePartenzaState } from '../composizione-partenza/composizione-partenza.state';
 import {
     TerminaComposizione,
     ToggleComposizioneMode
 } from '../../actions/composizione-partenza/composizione-partenza.actions';
 import { ClearListaSchedeContatto, ClearSchedaContattoTelefonata } from '../../actions/schede-contatto/schede-contatto.actions';
+import { ResetFormRichiesta } from '../../../../../shared/store/actions/form-richiesta/form-richiesta.actions';
 
 export const ViewComponentStateDefault: ViewComponentStateModel = {
     view: {
@@ -191,7 +191,7 @@ export class ViewComponentState {
                 view: lastState.view,
                 column: lastState.column
             });
-            dispatch(new ResetChiamata());
+            dispatch(new ResetFormRichiesta());
             dispatch(new ClearSchedaContattoTelefonata());
         }
     }

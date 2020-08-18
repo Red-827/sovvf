@@ -13,6 +13,10 @@ import { Sede } from '../model/sede.model';
 import { LatLngBoundsLiteral } from 'ngx-google-places-autocomplete/objects/latLng';
 import { StatoFonogramma } from '../enum/stato-fonogramma.enum';
 
+export function makeIdChiamata(operatore: Utente): string {
+    return `${operatore.sede.codice}-${operatore.id}-${makeID(8)}`;
+}
+
 export function makeCopy(value): any {
     return (JSON.parse(JSON.stringify(value)));
 }
@@ -92,16 +96,16 @@ export function makeID(lengthString?: number): string {
     return text;
 }
 
-export function makeIDChiamata(): string {
-    let text = '';
-    const _lengthString = 2;
-    const possible = '123456789';
-
-    for (let i = 0; i < _lengthString; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return `RM-0${text}`;
-}
+// export function makeIDChiamata(): string {
+//     let text = '';
+//     const _lengthString = 2;
+//     const possible = '123456789';
+//
+//     for (let i = 0; i < _lengthString; i++) {
+//         text += possible.charAt(Math.floor(Math.random() * possible.length));
+//     }
+//     return `RM-0${text}`;
+// }
 
 export function arraysEqual(array1: string[], array2: string[]): boolean {
     if (array1.length !== array2.length) {

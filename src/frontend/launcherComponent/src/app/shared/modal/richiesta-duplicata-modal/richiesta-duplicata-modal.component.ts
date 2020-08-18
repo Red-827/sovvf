@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
-import { ClearIndirizzo, ClearMarkerChiamata } from '../../../features/home/store/actions/chiamata/scheda-telefonata.actions';
 import { ToggleChiamata } from '../../../features/home/store/actions/view/view.actions';
+import { ClearIndirizzo, ClearMarkerChiamata } from '../../store/actions/form-richiesta/form-richiesta.actions';
 
 @Component({
     selector: 'app-richiesta-duplicata-modal',

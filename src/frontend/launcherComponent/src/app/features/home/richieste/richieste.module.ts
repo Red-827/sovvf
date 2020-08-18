@@ -20,7 +20,6 @@ import { RichiesteComponent } from './richieste.component';
 import { ListaRichiesteComponent } from './lista-richieste/lista-richieste.component';
 import { SintesiRichiestaSmComponent } from './lista-richieste/sintesi-richiesta-sm/sintesi-richiesta-sm.component';
 import { RichiestaFissataComponent } from './richiesta-fissata/richiesta-fissata.component';
-import { ModificaRichiestaComponent } from './modifica-richiesta/modifica-richiesta.component';
 /**
  Service Provider
  */
@@ -74,12 +73,10 @@ import { ModificaEntiModalComponent } from 'src/app/shared/modal/modifica-enti-m
         RichiesteComponent,
         ListaRichiesteComponent,
         RichiestaFissataComponent,
-        SintesiRichiestaSmComponent,
-        ModificaRichiestaComponent,
+        SintesiRichiestaSmComponent
     ],
     exports: [
-        RichiesteComponent,
-        ModificaRichiestaComponent,
+        RichiesteComponent
     ],
     entryComponents: [
         ListaEntiComponent,

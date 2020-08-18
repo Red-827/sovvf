@@ -1,43 +1,42 @@
-import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
-import {Coordinate} from '../../../../../shared/model/coordinate.model';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { NgZone } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Coordinate } from '../../../model/coordinate.model';
+import { SintesiRichiesta } from '../../../model/sintesi-richiesta.model';
+import { AzioneChiamataEnum } from '../../../enum/azione-chiamata.enum';
+import { ChiamataService } from '../../../../core/service/chiamata-service/chiamata.service';
+import { CopyToClipboard } from '../../../../features/home/store/actions/chiamata/clipboard.actions';
+import { GetListaRichieste, SetIdChiamataInviaPartenza, SetNeedRefresh } from '../../../../features/home/store/actions/richieste/richieste.actions';
+import { ShowToastr } from '../../actions/toastr/toastr.actions';
+import { ToastrType } from '../../../enum/toastr';
+import { RichiestaSelezionataState } from '../../../../features/home/store/states/richieste/richiesta-selezionata.state';
+import { RichiestaGestioneState } from '../../../../features/home/store/states/richieste/richiesta-gestione.state';
+import { AuthState } from '../../../../features/auth/store/auth.state';
+import { PaginationState } from '../pagination/pagination.state';
+import { UpdateFormValue } from '@ngxs/form-plugin';
+import { ToggleChiamata } from '../../../../features/home/store/actions/view/view.actions';
+import { GetInitCentroMappa, SetCoordCentroMappa, SetZoomCentroMappa } from '../../../../features/home/store/actions/maps/centro-mappa.actions';
+import { DelChiamataMarker, SetChiamataMarker, UpdateChiamataMarker } from '../../../../features/home/store/actions/maps/chiamate-markers.actions';
+import { GetMarkerDatiMeteo } from '../../../../features/home/store/actions/maps/marker-info-window.actions';
+import { RichiestaDuplicataModalComponent } from '../../..';
 import {
     ApriModaleRichiestaDuplicata,
     CestinaChiamata,
-    ClearChiamata, ClearIndirizzo,
+    ClearChiamata,
+    ClearIndirizzo,
     ClearMarkerChiamata,
     InsertChiamata,
     InsertChiamataSuccess,
     MarkerChiamata,
-    ReducerSchedaTelefonata,
-    ResetChiamata,
-    StartChiamata,
-    StartLoadingNuovaChiamata,
-    StopLoadingNuovaChiamata
-} from '../../actions/chiamata/scheda-telefonata.actions';
-import {CopyToClipboard} from '../../actions/chiamata/clipboard.actions';
-import {ToggleChiamata} from '../../actions/view/view.actions';
-import {GetInitCentroMappa, SetCoordCentroMappa, SetZoomCentroMappa} from '../../actions/maps/centro-mappa.actions';
-import {GetMarkerDatiMeteo} from '../../actions/maps/marker-info-window.actions';
-import {DelChiamataMarker, SetChiamataMarker, UpdateChiamataMarker} from '../../actions/maps/chiamate-markers.actions';
-import {ClipboardState} from './clipboard.state';
-import {SintesiRichiesta} from '../../../../../shared/model/sintesi-richiesta.model';
-import {AzioneChiamataEnum} from '../../../../../shared/enum/azione-chiamata.enum';
-import {ShowToastr} from '../../../../../shared/store/actions/toastr/toastr.actions';
-import {ToastrType} from '../../../../../shared/enum/toastr';
-import {ChiamataService} from '../../../../../core/service/chiamata-service/chiamata.service';
-import {GetListaRichieste, SetIdChiamataInviaPartenza, SetNeedRefresh} from '../../actions/richieste/richieste.actions';
-import {RichiestaSelezionataState} from '../richieste/richiesta-selezionata.state';
-import {PaginationState} from '../../../../../shared/store/states/pagination/pagination.state';
-import {RichiestaGestioneState} from '../richieste/richiesta-gestione.state';
-import {UpdateFormValue} from '@ngxs/form-plugin';
-import {NgZone} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {RichiestaDuplicataModalComponent} from '../../../../../shared/modal/richiesta-duplicata-modal/richiesta-duplicata-modal.component';
-import {ModalServiziComponent} from '../../../boxes/info-aggregate/modal-servizi/modal-servizi.component';
-import {AuthState} from '../../../../auth/store/auth.state';
+    ReducerFormRichiesta,
+    ResetFormRichiesta,
+    StartLoadingFormRichiesta,
+    StopLoadingFormRichiesta
+} from '../../actions/form-richiesta/form-richiesta.actions';
+import { ClipboardState } from '../../../../features/home/store/states/chiamata/clipboard.state';
 
-export interface SchedaTelefonataStateModel {
-    nuovaRichiestaForm: {
+export interface FormRichiestaStateModel {
+    form: {
         model: {
             selectedTipologie: string[],
             nominativo: string,
@@ -64,12 +63,11 @@ export interface SchedaTelefonataStateModel {
     nuovaRichiesta: SintesiRichiesta;
     azioneChiamata: AzioneChiamataEnum;
     idChiamataMarker: string;
-    resetChiamata: boolean;
-    loadingNuovaChiamata: boolean;
+    loadingFormRichiesta: boolean;
 }
 
-export const SchedaTelefonataStateDefaults: SchedaTelefonataStateModel = {
-    nuovaRichiestaForm: {
+export const FormRichiestaStateDefaults: FormRichiestaStateModel = {
+    form: {
         model: undefined,
         dirty: false,
         status: '',
@@ -79,17 +77,16 @@ export const SchedaTelefonataStateDefaults: SchedaTelefonataStateModel = {
     nuovaRichiesta: null,
     azioneChiamata: null,
     idChiamataMarker: null,
-    resetChiamata: true,
-    loadingNuovaChiamata: false
+    loadingFormRichiesta: false
 };
 
-@State<SchedaTelefonataStateModel>({
-    name: 'schedaTelefonata',
-    defaults: SchedaTelefonataStateDefaults,
+@State<FormRichiestaStateModel>({
+    name: 'formRichiesta',
+    defaults: FormRichiestaStateDefaults,
     children: [ClipboardState]
 })
 
-export class SchedaTelefonataState {
+export class FormRichiestaState {
 
     constructor(private chiamataService: ChiamataService,
                 private store: Store,
@@ -98,22 +95,17 @@ export class SchedaTelefonataState {
     }
 
     @Selector()
-    static resetChiamata(state: SchedaTelefonataStateModel) {
-        return state.resetChiamata;
-    }
-
-    @Selector()
-    static myChiamataMarker(state: SchedaTelefonataStateModel) {
+    static myChiamataMarker(state: FormRichiestaStateModel) {
         return state.idChiamataMarker;
     }
 
     @Selector()
-    static loadingNuovaChiamata(state: SchedaTelefonataStateModel) {
-        return state.loadingNuovaChiamata;
+    static loadingFormRichiesta(state: FormRichiestaStateModel) {
+        return state.loadingFormRichiesta;
     }
 
-    @Action(ReducerSchedaTelefonata)
-    reducer({getState, dispatch}: StateContext<SchedaTelefonataStateModel>, action: ReducerSchedaTelefonata) {
+    @Action(ReducerFormRichiesta)
+    reducerFormRichiesta({ getState, dispatch }: StateContext<FormRichiestaStateModel>, action: ReducerFormRichiesta) {
         switch (action.schedaTelefonata.tipo) {
             case 'copiaIndirizzo':
                 dispatch(new CopyToClipboard(getState().coordinate));
@@ -122,7 +114,7 @@ export class SchedaTelefonataState {
                 dispatch(new CestinaChiamata());
                 break;
             case 'reset':
-                dispatch(new ResetChiamata());
+                dispatch(new ResetFormRichiesta());
                 break;
             case 'cerca':
                 dispatch(new MarkerChiamata(action.schedaTelefonata.markerChiamata));
@@ -136,12 +128,12 @@ export class SchedaTelefonataState {
     }
 
     @Action(InsertChiamata)
-    insertChiamata({patchState, dispatch}: StateContext<SchedaTelefonataStateModel>, action: InsertChiamata) {
+    insertChiamata({ patchState, dispatch }: StateContext<FormRichiestaStateModel>, action: InsertChiamata) {
 
         patchState({
             azioneChiamata: action.azioneChiamata
         });
-        dispatch(new StartLoadingNuovaChiamata());
+        dispatch(new StartLoadingFormRichiesta());
 
         action.nuovaRichiesta.richiedente.telefono = action.nuovaRichiesta.richiedente.telefono.toString();
         this.chiamataService.insertChiamata(action.nuovaRichiesta).subscribe((richiesta: SintesiRichiesta) => {
@@ -155,7 +147,7 @@ export class SchedaTelefonataState {
                 dispatch(new CestinaChiamata());
             }
         }, () => {
-            dispatch(new StopLoadingNuovaChiamata());
+            dispatch(new StopLoadingFormRichiesta());
             patchState({
                 nuovaRichiesta: null,
                 azioneChiamata: null
@@ -165,29 +157,29 @@ export class SchedaTelefonataState {
     }
 
     @Action(InsertChiamataSuccess)
-    insertChiamataSuccess({dispatch}: StateContext<SchedaTelefonataStateModel>, action: InsertChiamataSuccess) {
+    insertChiamataSuccess({ dispatch }: StateContext<FormRichiestaStateModel>, action: InsertChiamataSuccess) {
         const idRichiestaSelezionata = this.store.selectSnapshot(RichiestaSelezionataState.idRichiestaSelezionata);
         const idRichiestaGestione = this.store.selectSnapshot(RichiestaGestioneState.idRichiestaGestione);
         const idUtenteLoggato = this.store.selectSnapshot(AuthState.currentUser).id;
         if (!idRichiestaSelezionata && !idRichiestaGestione) {
             const currentPage = this.store.selectSnapshot(PaginationState.page);
-            dispatch(new GetListaRichieste({page: currentPage}));
+            dispatch(new GetListaRichieste({ page: currentPage }));
             dispatch(new SetNeedRefresh(false));
         } else {
             dispatch(new SetNeedRefresh(true));
         }
-        dispatch(new StopLoadingNuovaChiamata());
+        dispatch(new StopLoadingFormRichiesta());
         if (idUtenteLoggato !== action.nuovaRichiesta.operatore.id) {
             dispatch(new ShowToastr(ToastrType.Success, 'Nuova chiamata inserita', action.nuovaRichiesta.descrizione, 5, null, true));
         }
     }
 
-    @Action(ResetChiamata)
-    resetChiamata({patchState, dispatch}: StateContext<SchedaTelefonataStateModel>) {
-        patchState(SchedaTelefonataStateDefaults);
+    @Action(ResetFormRichiesta)
+    resetFormRichiesta({ patchState, dispatch }: StateContext<FormRichiestaStateModel>) {
+        patchState(FormRichiestaStateDefaults);
         dispatch(
             new UpdateFormValue({
-                path: 'schedaTelefonata.nuovaRichiestaForm',
+                path: 'formRichiesta.form',
                 value: {
                     prioritaRichiesta: 3
                 }
@@ -196,18 +188,20 @@ export class SchedaTelefonataState {
     }
 
     @Action(CestinaChiamata)
-    cestinaChiamata({dispatch}: StateContext<SchedaTelefonataStateModel>) {
+    cestinaChiamata({ dispatch }: StateContext<FormRichiestaStateModel>) {
         dispatch(new ClearMarkerChiamata());
-        dispatch(new ResetChiamata());
+        dispatch(new ResetFormRichiesta());
         dispatch(new ToggleChiamata());
         dispatch(new ClearChiamata());
         dispatch(new GetInitCentroMappa());
     }
 
     @Action(MarkerChiamata)
-    markerChiamata({getState, patchState, dispatch}: StateContext<SchedaTelefonataStateModel>, action: MarkerChiamata) {
+    markerChiamata({ getState, patchState, dispatch }: StateContext<FormRichiestaStateModel>, action: MarkerChiamata) {
         const state = getState();
 
+        console.log('[MarkerChiamata] action', action.marker);
+        console.log('[MarkerChiamata] idChiamataMarker', state.idChiamataMarker);
         if (state.idChiamataMarker) {
             dispatch(new UpdateChiamataMarker(action.marker));
         } else {
@@ -228,7 +222,7 @@ export class SchedaTelefonataState {
     }
 
     @Action(ClearMarkerChiamata)
-    clearMarkerChiamata({getState, dispatch}: StateContext<SchedaTelefonataStateModel>) {
+    clearMarkerChiamata({ getState, dispatch }: StateContext<FormRichiestaStateModel>) {
         const state = getState();
         if (state.idChiamataMarker) {
             dispatch(new DelChiamataMarker(state.idChiamataMarker));
@@ -236,21 +230,21 @@ export class SchedaTelefonataState {
     }
 
     @Action(ClearChiamata)
-    clearChiamata({patchState}: StateContext<SchedaTelefonataStateModel>) {
-        patchState(SchedaTelefonataStateDefaults);
+    clearChiamata({ patchState }: StateContext<FormRichiestaStateModel>) {
+        patchState(FormRichiestaStateDefaults);
     }
 
-    @Action(StartChiamata)
-    startChiamata({patchState}: StateContext<SchedaTelefonataStateModel>) {
+    /* @Action(StartChiamata)
+    startChiamata({patchState}: StateContext<FormRichiestaStateModel>) {
         patchState({
             resetChiamata: false
         });
-    }
+    } */
 
     @Action(ClearIndirizzo)
-    ClearIndirizzo({dispatch}: StateContext<SchedaTelefonataStateModel>) {
+    ClearIndirizzo({ dispatch }: StateContext<FormRichiestaStateModel>) {
         dispatch(new UpdateFormValue({
-            path: 'schedaTelefonata.nuovaRichiestaForm',
+            path: 'formRichiesta.form',
             value: {
                 indirizzo: '',
                 latitudine: '',
@@ -260,7 +254,7 @@ export class SchedaTelefonataState {
     }
 
     @Action(ApriModaleRichiestaDuplicata)
-    apriModaleRichiestaDuplicata({dispatch}: StateContext<SchedaTelefonataStateModel>, action: ApriModaleRichiestaDuplicata) {
+    apriModaleRichiestaDuplicata({ dispatch }: StateContext<FormRichiestaStateModel>, action: ApriModaleRichiestaDuplicata) {
         this.ngZone.run(() => {
             const richiestaDuplicataModal = this.modalService.open(RichiestaDuplicataModalComponent, {
                 size: 'lg',
@@ -271,17 +265,17 @@ export class SchedaTelefonataState {
         });
     }
 
-    @Action(StartLoadingNuovaChiamata)
-    startLoadingNuovaChiamata({patchState}: StateContext<SchedaTelefonataStateModel>) {
+    @Action(StartLoadingFormRichiesta)
+    startLoadingFormRichiesta({ patchState }: StateContext<FormRichiestaStateModel>) {
         patchState({
-            loadingNuovaChiamata: true
+            loadingFormRichiesta: true
         });
     }
 
-    @Action(StopLoadingNuovaChiamata)
-    stopLoadingNuovaChiamata({patchState}: StateContext<SchedaTelefonataStateModel>) {
+    @Action(StopLoadingFormRichiesta)
+    stopLoadingFormRichiesta({ patchState }: StateContext<FormRichiestaStateModel>) {
         patchState({
-            loadingNuovaChiamata: false
+            loadingFormRichiesta: false
         });
     }
 
