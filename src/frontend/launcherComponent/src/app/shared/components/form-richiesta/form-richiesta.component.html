@@ -4,7 +4,7 @@
         <form [formGroup]="richiestaForm" ngxsForm="formRichiesta.form" autocomplete="off">
             <div class="row">
                 <!-- Titolo -->
-                <div class="col-5">
+                <div class="col-6">
                     <ng-template #rilevante>
                         <div *ngIf="f.rilevanzaGrave?.value">Intervento Rilevante</div>
                         <div *ngIf="f.rilevanzaStArCu?.value">Intervento Rilevante Storico Artistico
@@ -12,7 +12,17 @@
                         </div>
                     </ng-template>
                     <h3 class="mb-0">
-                        Richiesta Form
+                        <ng-template [ngIf]="!editMode">
+                            Chiamata in corso...
+                        </ng-template>
+                        <ng-template [ngIf]="editMode && richiestaModifica?.codice && !richiestaModifica?.codiceRichiesta">
+                            Modifica Chiamata
+                            #{{ richiestaModifica.codice }}
+                        </ng-template>
+                        <ng-template [ngIf]="editMode && richiestaModifica?.codiceRichiesta">
+                            Modifica Richiesta
+                            #{{ richiestaModifica.codiceRichiesta }}
+                        </ng-template>
                         <span *ngIf="f.rilevanzaGrave?.value || f.rilevanzaStArCu?.value"
                               class="d-inline-block mr-1 text-danger"
                               [ngbTooltip]="rilevante" placement="bottom">
@@ -22,7 +32,7 @@
                     </h3>
                 </div>
                 <!-- Spazio libero -->
-                <div class="col-4">
+                <div class="col-3">
                 </div>
                 <!-- Priorità -->
                 <div class="col-3 float-right text-right">

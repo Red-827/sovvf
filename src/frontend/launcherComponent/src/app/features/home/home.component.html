@@ -17,7 +17,9 @@
             <app-composizione-partenza *ngIf="viewState.composizione.active"
                                        [compPartenzaMode]="(composizioneMode$ | async)">
             </app-composizione-partenza>
-            <app-form-richiesta *ngIf="viewState.modifica.active" [editMode]="true"></app-form-richiesta>
+            <div *ngIf="viewState.modifica.active" class="pl-3">
+                <app-form-richiesta [editMode]="true"></app-form-richiesta>
+            </div>
             <app-mezzi-in-servizio *ngIf="viewState.mezziInServizio.active"></app-mezzi-in-servizio>
             <app-schede-contatto *ngIf="viewState.schedeContatto.active"></app-schede-contatto>
         </div>

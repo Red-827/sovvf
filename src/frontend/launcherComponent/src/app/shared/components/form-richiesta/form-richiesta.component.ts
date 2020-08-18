@@ -227,8 +227,8 @@ export class FormRichiestaComponent implements OnInit, OnDestroy {
         this.nuovaRichiesta.localita.coordinate.longitudine = f.longitudine.value;
         this.nuovaRichiesta.localita.coordinate.latitudine = f.latitudine.value;
         this.nuovaRichiesta.tags = (f.etichette.value && f.etichette.value.length > 0) ? f.etichette.value : null;
-        this.nuovaRichiesta.rilevanteGrave = f.rilevanzaGrave.value;
-        this.nuovaRichiesta.rilevanteStArCu = f.rilevanzaStArCu.value;
+        this.nuovaRichiesta.rilevanteGrave = f.rilevanzaGrave.value ? f.rilevanzaGrave.value : false;
+        this.nuovaRichiesta.rilevanteStArCu = f.rilevanzaStArCu.value ? f.rilevanzaStArCu.value : false;
         this.nuovaRichiesta.descrizione = f.descrizione.value;
         this.nuovaRichiesta.zoneEmergenza = (f.zoneEmergenza.value && f.zoneEmergenza.value.length > 0) ? f.zoneEmergenza.value.split(' ') : null;
         this.nuovaRichiesta.notePrivate = f.notePrivate.value;
@@ -459,9 +459,9 @@ export class FormRichiestaComponent implements OnInit, OnDestroy {
                 backdropClass: 'light-blue-backdrop',
                 centered: true
             });
-            modalConfermaAnnulla.componentInstance.icona = { descrizione: 'trash', colore: 'danger' };
-            modalConfermaAnnulla.componentInstance.titolo = 'Annulla Chiamata';
-            modalConfermaAnnulla.componentInstance.messaggio = 'Sei sicuro di voler annullare la chiamata?';
+            modalConfermaAnnulla.componentInstance.icona = { descrizione: !this.editMode ? 'trash' : 'edit', colore: 'danger' };
+            modalConfermaAnnulla.componentInstance.titolo = !this.editMode ? 'Annulla Chiamata' : 'Annulla Modifica';
+            modalConfermaAnnulla.componentInstance.messaggio = !this.editMode ? 'Sei sicuro di voler annullare la chiamata?' : 'Sei sicuro di voler annullare la modifiche?';
             modalConfermaAnnulla.componentInstance.messaggioAttenzione = 'Tutti i dati inseriti saranno eliminati.';
             modalConfermaAnnulla.componentInstance.bottoni = [
                 { type: 'ko', descrizione: 'Annulla', colore: 'secondary' },
@@ -601,123 +601,9 @@ export class FormRichiestaComponent implements OnInit, OnDestroy {
             this.store.dispatch(new ClearRichiestaModifica);
             return false;
         } else {
-            // this.setCampiModificati(this.nuovaRichiesta);
             return true;
         }
     }
-
-    /* setCampiModificati(richiesta: SintesiRichiesta) {
-        if (richiesta.richiedente.telefono !== this.richiestaModificaIniziale.richiedente.telefono) {
-            this.campiModificati.push('Telefono');
-        }
-        if (richiesta.richiedente.nominativo !== this.richiestaModificaIniziale.richiedente.nominativo) {
-            this.campiModificati.push('Nominativo');
-        }
-        if (richiesta.localita.indirizzo !== this.richiestaModificaIniziale.localita.indirizzo) {
-            this.campiModificati.push('Indirizzo');
-        }
-        if (richiesta.rilevanteGrave !== this.richiestaModificaIniziale.rilevanteGrave) {
-            this.campiModificati.push('Rilevanza');
-        }
-        if (richiesta.rilevanteStArCu !== this.richiestaModificaIniziale.rilevanteStArCu) {
-            this.campiModificati.push('RilevanzaStArCu');
-        }
-        if (richiesta.localita.piano !== this.richiestaModificaIniziale.localita.piano) {
-            this.campiModificati.push('Piano');
-        }
-        if (richiesta.descrizione !== this.richiestaModificaIniziale.descrizione) {
-            this.campiModificati.push('Descrizione');
-        }
-        if (richiesta.prioritaRichiesta !== this.richiestaModificaIniziale.prioritaRichiesta) {
-            this.campiModificati.push('Priorita');
-        }
-        if (checkArrayModificato(richiesta.zoneEmergenza, this.richiestaModificaIniziale.zoneEmergenza)) {
-            this.campiModificati.push('ZoneEmergenza');
-        }
-        if (checkArrayModificato(richiesta.tags, this.richiestaModificaIniziale.tags)) {
-            this.campiModificati.push('Tags');
-        }
-        if (checkTipologieModificate(richiesta.tipologie, this.richiestaModificaIniziale.tipologie)) {
-            this.campiModificati.push('Tipologie');
-        }
-        if (checkEntiModificati(richiesta.listaEntiIntervenuti, this.richiestaModificaIniziale.listaEntiIntervenuti)) {
-            this.campiModificati.push('Enti');
-        }
-
-        function checkArrayModificato(arr1: string[], arr2: string[]) {
-            let _return = false;
-            let count = 0;
-            const length = arr1 && arr1.length;
-            const lengthIniziale = arr2 && arr2.length;
-
-            if (lengthIniziale === 0) {
-                return;
-            }
-
-            if (length === lengthIniziale) {
-                arr1.forEach((zona: string) => {
-                    arr2.forEach((z: string) => {
-                        if (zona === z) {
-                            count++;
-                        }
-                    });
-                });
-
-                if (count !== length) {
-                    _return = true;
-                }
-            } else {
-                _return = true;
-            }
-            return _return;
-        }
-
-        function checkTipologieModificate(arr1: Tipologia[], arr2: Tipologia[]) {
-            let _return = false;
-            let count = 0;
-            const length = arr1 && arr1.length;
-            const lengthIniziale = arr2 && arr2.length;
-
-            if (length === lengthIniziale) {
-                arr1.forEach((tipologia: Tipologia) => {
-                    arr2.forEach((t: Tipologia) => {
-                        if (tipologia.codice === t.codice) {
-                            count++;
-                        }
-                    });
-                });
-
-                if (count !== length) {
-                    _return = true;
-                }
-            } else {
-                _return = true;
-            }
-            return _return;
-        }
-
-        function checkEntiModificati(arr1: Ente[], arr2: Ente[]) {
-            let _return = false;
-            let count = 0;
-            const length = arr1 && arr1.length;
-            const lengthIniziale = arr2 && arr2.length;
-            if (length === lengthIniziale) {
-                arr1.forEach((enti: Ente) => {
-                    arr2.forEach((e: Ente) => {
-                        if (enti.codice === e.codice) {
-                            count++;
-                        }
-                    });
-                });
-                if (count !== length) {
-                    _return = true;
-                }
-            } else {
-                _return = true;
-            }
-            return _return;
-        }
-    } */
 
     // IMPOSTA AZIONE CHIAMATA
     impostaAzioneChiamata($event: AzioneChiamataEnum): void {
